@@ -43,9 +43,9 @@ func (b *bot) dictionary(message *tgbotapi.Message) {
 
 			return
 		}
-		
+
 		d := &model.Dictionary{}
-		
+
 		if err := d.Parse(args); err != nil {
 			switch err {
 			case model.ErrorCantParseDictionary:
@@ -66,7 +66,7 @@ func (b *bot) dictionary(message *tgbotapi.Message) {
 
 			return
 		}
-		
+
 		_, _ = b.reply("_Новое слово успешно добавлено_", message)
 
 		return
@@ -97,7 +97,7 @@ func (b *bot) dictionary(message *tgbotapi.Message) {
 
 			return
 		}
-		
+
 		_, _ = b.reply("_Слово успешно удалено_", message)
 
 		return

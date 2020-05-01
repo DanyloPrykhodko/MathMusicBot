@@ -15,14 +15,14 @@ func (b *bot) send(text string, chatID int64) (*tgbotapi.Message, error) {
 	}
 
 	m, err := b.Send(config)
-	if  err != nil {
+	if err != nil {
 		return nil, err
 	}
 
 	return &m, err
 }
 
-func (b *bot) sendSelfDestruct(text string, duration time.Duration, chatID int64)  {
+func (b *bot) sendSelfDestruct(text string, duration time.Duration, chatID int64) {
 	m, err := b.send(text, chatID)
 	if err == nil {
 		go func() {
@@ -50,7 +50,7 @@ func (b *bot) reply(text string, message *tgbotapi.Message) (*tgbotapi.Message, 
 	return &m, err
 }
 
-func (b *bot) replySelfDestruct(text string, duration time.Duration, message *tgbotapi.Message)  {
+func (b *bot) replySelfDestruct(text string, duration time.Duration, message *tgbotapi.Message) {
 	m, err := b.reply(text, message)
 	if err == nil {
 		go func() {
@@ -73,4 +73,3 @@ func (b *bot) delete(message *tgbotapi.Message) (*tgbotapi.Message, error) {
 
 	return &m, err
 }
-

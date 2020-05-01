@@ -53,7 +53,7 @@ func (b *bot) message(message *tgbotapi.Message) {
 			log.Println(r)
 			m, err := b.send("_Что-то пошло не так_", message.Chat.ID)
 			if err == nil {
-				time.Sleep(5*time.Second)
+				time.Sleep(5 * time.Second)
 				_, _ = b.delete(m)
 			}
 		}
