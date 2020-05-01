@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/drprykhodko/MathMusicBot/internal/app/model"
-	"github.com/drprykhodko/MathMusicBot/internal/app/store"
 )
 
 var (
@@ -13,11 +12,11 @@ var (
 )
 
 type DictionaryRepository struct {
-	store store.Storer
+	store Store
 }
 
-func (d DictionaryRepository) GetKeys(db *sql.DB) (keys []string, err error) {
-	rows, err := db.Query(
+func (d DictionaryRepository) GetKeys() (keys []string, err error) {
+	rows, err := d.store.db.Query(
 		`SELECT "key" FROM "dictionary" ORDER BY "key"`,
 	)
 	if err != nil {
@@ -36,9 +35,9 @@ func (d DictionaryRepository) GetKeys(db *sql.DB) (keys []string, err error) {
 	return
 }
 
-func (d DictionaryRepository) Get(db *sql.DB, key string) (dictionary *model.Dictionary, err error) {
+func (d DictionaryRepository) Get(key string) (dictionary *model.Dictionary, err error) {
 	dictionary = &model.Dictionary{}
-	err = db.QueryRow(
+	err = d.store.db.QueryRow(
 		`SELECT "key", "value" FROM "dictionary" WHERE LOWER("key") = LOWER($1)`,
 		key,
 	).Scan(
@@ -52,8 +51,8 @@ func (d DictionaryRepository) Get(db *sql.DB, key string) (dictionary *model.Dic
 	return
 }
 
-func (d DictionaryRepository) Set(db *sql.DB, dictionary *model.Dictionary) (err error) {
-	_, err = db.Exec(
+func (d DictionaryRepository) Set(dictionary *model.Dictionary) (err error) {
+	_, err = d.store.db.Exec(
 		`INSERT INTO "dictionary"("key", "value") VALUES ($1, $2)`,
 		dictionary.Key,
 		dictionary.Value,
@@ -62,8 +61,8 @@ func (d DictionaryRepository) Set(db *sql.DB, dictionary *model.Dictionary) (err
 	return
 }
 
-func (d DictionaryRepository) Delete(db *sql.DB, key string) (err error) {
-	result, err := db.Exec(
+func (d DictionaryRepository) Delete(key string) (err error) {
+	result, err := d.store.db.Exec(
 		`DELETE FROM "dictionary" WHERE LOWER("key") = LOWER($1)`,
 		key,
 	)

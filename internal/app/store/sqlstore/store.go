@@ -16,10 +16,6 @@ func New(db *sql.DB) *Store {
 	}
 }
 
-func (s Store) DB() *sql.DB {
-	return s.db
-}
-
 func (s Store) Dictionary() store.DictionaryRepositorier {
 	if s.dictionary != nil {
 		return s.dictionary
