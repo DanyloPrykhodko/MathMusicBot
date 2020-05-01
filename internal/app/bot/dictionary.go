@@ -10,13 +10,11 @@ import (
 )
 
 func (b *bot) dictionary(message *tgbotapi.Message) {
-	db := b.store.DB()
-
 	args := message.CommandArguments()
 	switch message.Command() {
 	case Get:
 		if args == "" {
-			keys, err := b.store.Dictionary().GetKeys(db)
+			keys, err := b.store.Dictionary().GetKeys()
 			if err != nil {
 				panic(err)
 			}
@@ -25,7 +23,7 @@ func (b *bot) dictionary(message *tgbotapi.Message) {
 			return
 		}
 
-		d, err := b.store.Dictionary().Get(db, args)
+		d, err := b.store.Dictionary().Get(args)
 		if err != nil {
 			if err == sqlstore.ErrorUnknownKey {
 				b.replySelfDestruct("_Ничего не найдено_", 5*time.Second, message)
@@ -62,8 +60,8 @@ func (b *bot) dictionary(message *tgbotapi.Message) {
 
 			return
 		}
-		
-		if err := b.store.Dictionary().Set(db, d); err != nil {
+
+		if err := b.store.Dictionary().Set(d); err != nil {
 			b.replySelfDestruct("_Не удалось добавить новое слово_", 5*time.Second, message)
 
 			return
@@ -78,7 +76,7 @@ func (b *bot) dictionary(message *tgbotapi.Message) {
 
 			return
 		}
-		_, err := b.store.Dictionary().Get(db, args)
+		_, err := b.store.Dictionary().Get(args)
 		if err != nil {
 			if err == sqlstore.ErrorUnknownKey {
 				b.replySelfDestruct("_Такое слово отсутствует_", 5*time.Second, message)
@@ -88,8 +86,8 @@ func (b *bot) dictionary(message *tgbotapi.Message) {
 				panic(err)
 			}
 		}
-		
-		err = b.store.Dictionary().Delete(db, args)
+
+		err = b.store.Dictionary().Delete(args)
 		if err != nil {
 			if err == sqlstore.ErrorNothingToDelete {
 				b.replySelfDestruct("_Такое слово отсутствует_", 5*time.Second, message)
